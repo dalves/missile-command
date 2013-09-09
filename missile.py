@@ -39,7 +39,7 @@ while bases:
             x = int(3*radius(t / 2))
             label = titlefont.render("Round " + str(round_num), 1, (x, x, x))
             screen.blit(label, (450-label.get_width()/2, 200))
-        label = scorefont.render("Score " + str(score)), 1, (255,255,255))
+        label = scorefont.render("Score " + str(score), 1, (255,255,255))
         screen.blit(label, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
