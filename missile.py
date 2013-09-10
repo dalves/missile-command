@@ -63,8 +63,8 @@ while bases:
         new_missiles = []
         for m in missiles:
             m.pos = add_scaled_vector(m.pos, m.v, 1)
-            pygame.draw.aaline(screen, m.color, snap(m.pos),
-                    snap(add_scaled_vector(m.pos, m.v, -m.tail)), 8)
+            pygame.draw.aaline(screen, m.color, m.pos,
+                    add_scaled_vector(m.pos, m.v, -m.tail), 8)
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
                 new_explosions.append(Explosion(pos=m.pos, age=1))
