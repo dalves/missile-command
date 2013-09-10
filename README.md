@@ -16,3 +16,8 @@ Notes:
   arguments from the constructor into attributes. This seems like a good
   tradeoff between reducing line count and maintaining readability. 
 * Lambdas are used instead of functions to reduce line count.
+* Multi-warhead missiles will start appearing on later levels.
+
+TODO:
+
+* Add high score table (estimated cost: 8 lines)
