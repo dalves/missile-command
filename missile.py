@@ -6,7 +6,7 @@ Point = namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 snap = lambda x: map(int, x)
 radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
-add_svector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
+add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
 size = width, height = 900, 600
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN|pygame.HWSURFACE)
@@ -30,7 +30,7 @@ while bases:
         dest = choice(bases).pos
         time = randint(200, end_frame-5)
         v = Point(randint(-3, 3), 3)
-        start = Point(dest.x - v.x * time, dest.y - v.y * time)
+        start = add_scaled_vector(dest, v, -time)
         missiles.append(Missile(pos=start, dest=dest, color=(250,0,0), v=v,
                 tail=25, icbm=randint(50, 350) if x+7<round_num else 999))
     for t in xrange(end_frame):
@@ -62,9 +62,9 @@ while bases:
         new_explosions = []
         new_missiles = []
         for m in missiles:
-            m.pos = add_svector(m.pos, m.v, 1)
+            m.pos = add_scaled_vector(m.pos, m.v, 1)
             pygame.draw.aaline(screen, m.color, snap(m.pos),
-                    snap(add_svector(m.pos, m.v, -m.tail)), 8)
+                    snap(add_scaled_vector(m.pos, m.v, -m.tail)), 8)
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
                 new_explosions.append(Explosion(pos=m.pos, age=1))
