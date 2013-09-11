@@ -41,8 +41,9 @@ while bases:
             screen.blit(label, (450-label.get_width()/2, 200))
         label = scorefont.render("Score " + str(score), 1, (255,255,255))
         screen.blit(label, (0, 0))
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and
+                    e.key in (pygame.K_q, pygame.K_ESCAPE)):
                 sys.exit()
             elif event.type == pygame.MOUSEBUTTONUP:
                 armed = [b for b in bases if b.armed_in == 0]
@@ -50,10 +51,10 @@ while bases:
                     dest = Point(*pygame.mouse.get_pos())
                     base = sorted(armed, cmp=lambda a,b: \
                             int(dist(a.pos, dest) - dist(b.pos, dest)))[0]
-                    p = Point(base.pos.x, height-20)
+                    pos = Point(base.pos.x, height-20)
                     base.armed_in = 25
-                    missiles.append(Missile(pos=p, dest=dest, tail=1, icbm=0,
-                            v=aim_at(p, dest, 5), color=(160, 255, 220)))
+                    missiles.append(Missile(pos=pos, dest=dest, tail=1, icbm=0,
+                            v=aim_at(pos, dest, 5), color=(160, 255, 220)))
         for base in bases:
             base.armed_in = max(0, base.armed_in - 1)
             pygame.draw.circle(screen, (0, 0, 255), base.pos, 20)
@@ -97,4 +98,3 @@ while bases:
         clock.tick(30)
         pygame.display.flip()
     score += 500 + round_num * 100
-pygame.quit()
