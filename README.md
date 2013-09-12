@@ -7,7 +7,8 @@ This started out as a challenge I posed to my friend David Do to write Missile
 Command in 100 lines of Python. 
 
 Challenge Rules:
-* 4-space indents, one statement per line (no semicolons!)
+* 4-space indents, one statement per line (no fair using semicolons to get 
+  multiple statements per line!)
 * 79 characters per line maximum (as per PEP-8)
 
 Notes:
@@ -21,3 +22,6 @@ Notes:
 TODO:
 
 * Add high score table (estimated cost: 8 lines)
+* End game a few seconds after last base dies instead of waiting until end of
+  current round. (2 lines)
+* Show "game over" on screen (3 lines)

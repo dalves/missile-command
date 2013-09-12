@@ -1,6 +1,6 @@
 # Missile command in 100 lines of Python using Pygame!
 # Comments added for clarity.
-from __future__ import division
+from __future__ import division # Use floating-point division on ints
 import sys, pygame
 from collections import namedtuple
 from random import randint, choice
@@ -32,7 +32,7 @@ size = width, height = 900, 600
 
 # On my laptop, the game runs at about 12 fps without hardware acceleration and
 # easily runs at 60 with hardware acceleration.
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN|pygame.HWSURFACE)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWSURFACE)
 clock = pygame.time.Clock()
 
 # A pretty hacky way to save lines. We want to assign properties of generic
@@ -151,7 +151,7 @@ while bases:
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
-                    score += m.color[0] + (800 if m.icbm > 0 else 0)
+                    score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
                     new_explosions.append(Explosion(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), snap(ex.pos), r)
             ex.age += 1
@@ -164,4 +164,4 @@ while bases:
         missiles[:] = [x for x in missiles if x.alive]
         clock.tick(30)
         pygame.display.flip()
-    score += 500 + round_num * 100
+    score += round_num * 1000 + len(bases) * 2500
