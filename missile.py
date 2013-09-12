@@ -1,4 +1,4 @@
-from __future__ import division
+from __future__ import division # Use floating-point division on ints
 import sys, pygame
 from collections import namedtuple
 from random import randint, choice
@@ -9,7 +9,7 @@ radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
 size = width, height = 900, 600
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN|pygame.HWSURFACE)
+screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWSURFACE)
 clock = pygame.time.Clock()
 class AttributeHack(object):
     def __init__(self, **kwargs):
