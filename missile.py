@@ -99,7 +99,7 @@ while bases:
             if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and
                     e.key in (pygame.K_q, pygame.K_ESCAPE)):
                 sys.exit()
-            elif event.type == pygame.MOUSEBUTTONUP:
+            elif e.type == pygame.MOUSEBUTTONUP:
                 # only bases that are armed can fire. Bases take a while to
                 # re-arm themselves after they fire. This is to prevent the
                 # player from being invincible by just spamming defensive
