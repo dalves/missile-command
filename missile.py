@@ -151,6 +151,11 @@ while bases:
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
+                    # To save lines, use the red component of the missile color
+                    # to give points for killing incoming missiles without
+                    # giving points for killing our own missiles. Incoming
+                    # missiles have red=250 while defensive missiles have
+                    # red=0.
                     score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
                     new_explosions.append(Explosion(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), snap(ex.pos), r)
