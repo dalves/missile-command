@@ -85,7 +85,7 @@ while bases:
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
-                    score += m.color[0] + (800 if m.icbm > 0 else 0)
+                    score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
                     new_explosions.append(Explosion(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), snap(ex.pos), r)
             ex.age += 1
@@ -97,4 +97,4 @@ while bases:
         missiles[:] = [x for x in missiles if x.alive]
         clock.tick(30)
         pygame.display.flip()
-    score += 500 + round_num * 100
+    score += round_num * 1000 + len(bases) * 2500
