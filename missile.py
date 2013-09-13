@@ -1,11 +1,13 @@
-from __future__ import division # Use floating-point division on ints
+score = 0     # Missile Command in 100 lines of Python by David Alves
+round_num = 0 # Apologies for how unreadable this code is -- the goal is to
+size = width, height = 900, 600 # cram as many features into 100 lines as I can
+from __future__ import division # even at the expense of some readability. :)
 import sys, pygame, random as rand, collections
 Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
-size = width, height = 900, 600
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWSURFACE)
 clock = pygame.time.Clock()
 class AttributeHack(object):
@@ -15,8 +17,6 @@ Base = Missile = Explosion = AttributeHack
 pygame.init()
 scorefont = pygame.font.SysFont("monospace", 15)
 titlefont = pygame.font.SysFont("monospace", 100)
-round_num = 0
-score = 0
 bases = [Base(pos=Point(250+100*x, height), armed_in=30*x) for x in xrange(5)]
 explosions = []
 missiles = []
