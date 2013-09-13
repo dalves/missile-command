@@ -49,8 +49,7 @@ while bases:
                 armed = [b for b in bases if b.armed_in == 0]
                 if armed:
                     dest = Point(*pygame.mouse.get_pos())
-                    base = sorted(armed, cmp=lambda a,b: \
-                            int(dist(a.pos, dest) - dist(b.pos, dest)))[0]
+                    base = min(armed, key=lambda b: dist(b.pos, dest))
                     pos = Point(base.pos.x, height-20)
                     base.armed_in = 25
                     missiles.append(Missile(pos=pos, dest=dest, tail=1, icbm=0,
