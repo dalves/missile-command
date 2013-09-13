@@ -1,7 +1,6 @@
 from __future__ import division # Use floating-point division on ints
-import sys, pygame
+import sys, pygame, random as rand
 from collections import namedtuple
-from random import randint, choice
 Point = namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 snap = lambda x: map(int, x)
@@ -29,12 +28,12 @@ while bases:
     round_num += 1
     end_frame = 250 + round_num * 50
     for x in xrange(round_num - 1 +int(1.2**round_num)):
-        dest = choice(bases).pos
-        time = randint(200, end_frame-5)
-        v = Point(randint(-3, 3), 3)
+        dest = rand.choice(bases).pos
+        time = rand.randint(200, end_frame-5)
+        v = Point(rand.randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, -time)
         missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
-                tail=25, icbm=randint(50, 350) if x+7<round_num else 999))
+                tail=25, icbm=rand.randint(50, 350) if x+7<round_num else 999))
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
         if t < 55:
