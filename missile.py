@@ -1,7 +1,6 @@
 from __future__ import division # Use floating-point division on ints
-import sys, pygame, random as rand
-from collections import namedtuple
-Point = namedtuple('Point', 'x y')
+import sys, pygame, random as rand, collections
+Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
