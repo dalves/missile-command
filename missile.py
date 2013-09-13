@@ -23,6 +23,8 @@ score = 0
 bases = [Base(pos=Point(250+100*x, height), armed_in=30*x) for x in xrange(5)]
 explosions = []
 missiles = []
+def text(font, string, position, color):
+    screen.blit(font.render(string, 1, color), position)
 while bases:
     round_num += 1
     end_frame = 250 + round_num * 50
@@ -34,13 +36,11 @@ while bases:
         missiles.append(Missile(pos=start, dest=dest, color=(250,0,0), v=v,
                 tail=25, icbm=randint(50, 350) if x+7<round_num else 999))
     for t in xrange(end_frame):
-        screen.fill((0,0,5))
+        screen.fill((0,0,0))
         if t < 55:
             x = int(3*radius(t / 2))
-            label = titlefont.render("Round " + str(round_num), 1, (x, x, x))
-            screen.blit(label, (450-label.get_width()/2, 200))
-        label = scorefont.render("Score " + str(score), 1, (255,255,255))
-        screen.blit(label, (0, 0))
+            text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
+        text(scorefont, "Score %d" % score, (0, 0), (255, 255, 255))
         for e in pygame.event.get():
             if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and
                     e.key in (pygame.K_q, pygame.K_ESCAPE)):
