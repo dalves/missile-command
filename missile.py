@@ -33,10 +33,10 @@ while bases:
         time = randint(200, end_frame-5)
         v = Point(randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, -time)
-        missiles.append(Missile(pos=start, dest=dest, color=(250,0,0), v=v,
+        missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
                 tail=25, icbm=randint(50, 350) if x+7<round_num else 999))
     for t in xrange(end_frame):
-        screen.fill((0,0,0))
+        screen.fill((0, 0, 0))
         if t < 55:
             x = int(3*radius(t / 2))
             text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
