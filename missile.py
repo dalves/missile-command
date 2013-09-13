@@ -60,39 +60,36 @@ while bases:
             pygame.draw.circle(screen, (0, 0, 255), base.pos, 20)
             pygame.draw.circle(screen, (0, 255, 99),
                     (base.pos.x, base.pos.y-20+base.armed_in), 5)
-        new_explosions = []
-        new_missiles = []
-        for m in missiles:
+        for m in missiles[:]:
             m.pos = add_scaled_vector(m.pos, m.v, 1)
             pygame.draw.aaline(screen, m.color, m.pos,
                     add_scaled_vector(m.pos, m.v, -m.tail), 8)
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
-                new_explosions.append(Explosion(pos=m.pos, age=1))
+                explosions.append(Explosion(pos=m.pos, age=0))
             elif m.icbm == m.pos.y and len(bases) > 1 and 0 < m.pos.x < 900:
                 m.alive = 0
                 for base in bases:
-                    new_missiles.append(Missile(pos=m.pos, dest=base.pos,
+                    missiles.append(Missile(pos=m.pos, dest=base.pos,
                             v=aim_at(m.pos, base.pos, (600-m.pos.y)/3),
                             color=(250, 0, 0), tail=5, icbm=0))
-        missiles += new_missiles
-        for ex in explosions:
+        for ex in explosions[:]:
             r = int(radius(ex.age))
             for base in bases:
                 if dist(base.pos, ex.pos) < r * 2/3:
                     base.alive = 0
-                    new_explosions.append(Explosion(pos=base.pos, age=1))
+                    explosions.append(Explosion(pos=base.pos, age=1))
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
                     score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
-                    new_explosions.append(Explosion(pos=m.pos, age=1))
+                    explosions.append(Explosion(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), snap(ex.pos), r)
             ex.age += 1
         for ex in explosions: # paint inner part in separate pass, looks better
             r = int(radius(ex.age) * (30-ex.age) / 30)
             pygame.draw.circle(screen, (255, 150, 0), snap(ex.pos), r)
-        explosions = [x for x in explosions + new_explosions if x.age < 29]
+        explosions = [x for x in explosions if x.age < 29]
         bases[:] = [x for x in bases if x.alive]
         missiles[:] = [x for x in missiles if x.alive]
         clock.tick(30)
