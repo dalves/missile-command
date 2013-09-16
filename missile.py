@@ -1,7 +1,7 @@
-score = 0     # Missile Command in 100 lines of Python by David Alves
-round_num = 0 # Apologies for how unreadable this code is -- the goal is to
-size = width, height = 900, 600 # cram as many features into 100 lines as I can
-from __future__ import division # even at the expense of some readability. :)
+from __future__ import division # Missile Command in 100 lines of Python
+score = 0         # Apologies for how unreadable this code is -- the goal is to
+round_num = 0     # cram as many features into 100 lines as I can, even at the
+size = width, height = 900, 600               # expense of some readability. :)
 import sys, pygame, random as rand, collections
 Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
