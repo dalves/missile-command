@@ -5,7 +5,7 @@ size = width, height = 900, 600               # expense of some readability. :)
 import sys, pygame, random as rand, collections
 Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
-radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
+radius = lambda x: 350 * (x / 30 - 2 * (x / 30) ** 2 + (x / 30) ** 3)
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWSURFACE)
@@ -33,7 +33,7 @@ while bases:
                 tail=25, icbm=height - rand.randint(50, 180) * 3)
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
-        if t < 55:
+        if t < 60:
             x = int(3 * radius(t / 2))
             text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
         text(scorefont, "Score %d" % score, (0, 0), (255, 255, 255))
@@ -80,11 +80,11 @@ while bases:
                     score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
                     explosions.append(Explosion(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), map(int, ex.pos), r)
-            ex.age += 1
         for ex in explosions: # paint inner part in separate pass, looks better
             r = int(radius(ex.age) * (30 - ex.age) / 30)
             pygame.draw.circle(screen, (255, 150, 0), map(int, ex.pos), r)
-        explosions = [x for x in explosions if x.age < 29]
+            ex.age += 1
+        explosions = [x for x in explosions if x.age <= 30]
         bases[:] = [x for x in bases if x.alive]
         missiles[:] = [x for x in missiles if x.alive]
         clock.tick(30)
