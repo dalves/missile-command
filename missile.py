@@ -30,7 +30,7 @@ while bases:
         v = Point(rand.randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
         missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
-                tail=25, icbm=rand.randint(50, 350) if x + 7 < round_num else 999))
+                tail=25, icbm=height - rand.randint(50, 180) * 3)
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
         if t < 55:
@@ -62,7 +62,7 @@ while bases:
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
                 explosions.append(Explosion(pos=m.pos, age=0))
-            elif m.icbm == m.pos.y and len(bases) > 1 and 0 < m.pos.x < 900:
+            elif m.icbm == m.pos.y and round_num > 5 and 0 < m.pos.x < 900:
                 m.alive = 0
                 for base in bases:
                     missiles.append(Missile(pos=m.pos, dest=base.pos,
