@@ -25,16 +25,16 @@ def text(font, string, position, color):
 while bases:
     round_num += 1
     end_frame = 250 + round_num * 50
-    for x in xrange(round_num - 1 +int(1.2**round_num)):
-        dest = Point(rand.randint(200, width-200), height)
+    for x in xrange(round_num - 1 + int(1.2 ** round_num)):
+        dest = Point(rand.randint(200, width - 200), height)
         v = Point(rand.randint(-3, 3), 3)
-        start = add_scaled_vector(dest, v, -rand.randint(200, end_frame-5))
+        start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
         missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
-                tail=25, icbm=rand.randint(50, 350) if x+7<round_num else 999))
+                tail=25, icbm=rand.randint(50, 350) if x + 7 < round_num else 999))
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
         if t < 55:
-            x = int(3*radius(t / 2))
+            x = int(3 * radius(t / 2))
             text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
         text(scorefont, "Score %d" % score, (0, 0), (255, 255, 255))
         for e in pygame.event.get():
@@ -46,7 +46,7 @@ while bases:
                 if armed:
                     dest = Point(*pygame.mouse.get_pos())
                     base = min(armed, key=lambda b: dist(b.pos, dest))
-                    pos = Point(base.pos.x, height-20)
+                    pos = Point(base.pos.x, height - 20)
                     base.armed_in = 25
                     missiles.append(Missile(pos=pos, dest=dest, tail=1, icbm=0,
                             v=aim_at(pos, dest, 5), color=(160, 255, 220)))
@@ -54,7 +54,7 @@ while bases:
             base.armed_in = max(0, base.armed_in - 1)
             pygame.draw.circle(screen, (0, 0, 255), base.pos, 20)
             pygame.draw.circle(screen, (0, 255, 99),
-                    (base.pos.x, base.pos.y-20+base.armed_in), 5)
+                    (base.pos.x, base.pos.y - 20 + base.armed_in), 5)
         for m in missiles[:]:
             m.pos = add_scaled_vector(m.pos, m.v, 1)
             pygame.draw.aaline(screen, m.color, m.pos,
@@ -66,12 +66,12 @@ while bases:
                 m.alive = 0
                 for base in bases:
                     missiles.append(Missile(pos=m.pos, dest=base.pos,
-                            v=aim_at(m.pos, base.pos, (600-m.pos.y)/3),
+                            v=aim_at(m.pos, base.pos, (600 - m.pos.y) / 3),
                             color=(250, 0, 0), tail=5, icbm=0))
         for ex in explosions[:]:
             r = int(radius(ex.age))
             for base in bases:
-                if dist(base.pos, ex.pos) < r * 2/3:
+                if dist(base.pos, ex.pos) < r * .6:
                     base.alive = 0
                     explosions.append(Explosion(pos=base.pos, age=1))
             for m in missiles:
@@ -82,7 +82,7 @@ while bases:
             pygame.draw.circle(screen, (200, 0, 0), map(int, ex.pos), r)
             ex.age += 1
         for ex in explosions: # paint inner part in separate pass, looks better
-            r = int(radius(ex.age) * (30-ex.age) / 30)
+            r = int(radius(ex.age) * (30 - ex.age) / 30)
             pygame.draw.circle(screen, (255, 150, 0), map(int, ex.pos), r)
         explosions = [x for x in explosions if x.age < 29]
         bases[:] = [x for x in bases if x.alive]
