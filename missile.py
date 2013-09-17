@@ -1,7 +1,7 @@
 from __future__ import division # Missile Command in 100 lines of Python
 score = 0 # Apologies for how unreadable this code is -- the goal is to cram as
 round_num = 0 # many features into 100 lines as I can, even at the expense of
-size = widt:h, height = 900, 600 # readability. :) See with-comments branch for
+size = width, height = 900, 600 # readability. :) See with-comments branch for
 import sys, pygame, random as rand, collections # a commented version.
 Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
