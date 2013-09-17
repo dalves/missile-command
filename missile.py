@@ -1,10 +1,3 @@
-
-# Explosion radius as a function of time. I chose this function after playing
-# around in Wolfram|Alpha for a while. It increases sharply from f(0) = 0 to a
-# max at f(11) ~= 53, then slowly back down to f(28) ~= 0
-radius = lambda age: (6375*age)/616-(2875*age**2)/4928+(75*age**3)/9856
-
-# Utility function to add a vector times a constant to a position.
 from __future__ import division # Missile Command in 100 lines of Python
 score = 0 # Apologies for how unreadable this code is -- the goal is to cram as
 round_num = 0 # many features into 100 lines as I can, even at the expense of
@@ -23,6 +16,7 @@ dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 # a max at f(10) ~= 50, then slowly back down to f(30) = 0
 radius = lambda x: 350 * (x / 30 - 2 * (x / 30) ** 2 + (x / 30) ** 3)
 
+# Utility function to add a vector times a constant to a position.
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 
 # Given a start s, target t, and arrival time, return the velocity vector.
