@@ -30,7 +30,7 @@ while bases:
         v = Point(rand.randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
         missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
-                tail=25, icbm=height - rand.randint(50, 180) * 3)
+                tail=25, icbm=height - rand.randint(50, 180) * 3))
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
         if t < 60:
