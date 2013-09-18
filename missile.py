@@ -38,8 +38,7 @@ while bases:
             text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
         text(scorefont, "Score %d" % score, (0, 0), (255, 255, 255))
         for e in pygame.event.get():
-            if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and
-                    e.key in (pygame.K_q, pygame.K_ESCAPE)):
+            if hasattr(e, 'key') and e.key in (pygame.K_q, pygame.K_ESCAPE):
                 sys.exit()
             elif e.type == pygame.MOUSEBUTTONUP:
                 armed = [b for b in bases if b.armed_in == 0]
