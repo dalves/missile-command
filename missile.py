@@ -23,8 +23,8 @@ def text(font, string, position, color):
     screen.blit(font.render(string, 1, color), position)
 while bases:
     round_num += 1
-    end_frame = 250 + round_num * 50
-    for x in xrange(round_num - 1 + int(1.2 ** round_num)):
+    end_frame = 300 + round_num * 50
+    for x in xrange(5 + round_num * 2 + int(1.13 ** round_num)):
         dest = Point(rand.randint(200, width - 200), height)
         v = Point(rand.randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, - rand.randint(170, end_frame - 5))
