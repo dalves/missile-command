@@ -1,8 +1,8 @@
 from __future__ import division # Missile Command in 100 lines of Python
-score = 0 # Apologies for how unreadable this code is -- the goal is to cram as
-round_num = 0 # many features into 100 lines as I can, even at the expense of
-size = width, height = 900, 600 # readability. :) See with-comments branch for
-import sys, pygame, random as rand, collections # a commented version.
+score = 0 # Apologies for how unreadable this code is. The goal is to cram lots
+round_num = 0 # of features into 100 lines, even at the expense of readability.
+size = width, height = 900, 600 # :) See with-comments branch for comments.
+import sys, pygame, random as rand, collections, bisect, pickle
 Point = collections.namedtuple('Point', 'x y')
 dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
 radius = lambda x: 350 * (x / 30 - 2 * (x / 30) ** 2 + (x / 30) ** 3)
@@ -88,3 +88,13 @@ while bases:
         clock.tick(30)
         pygame.display.flip()
     score += round_num * 1000 + len(bases) * 2500
+pygame.quit()
+try:
+    scores = pickle.load(open('hiscore', 'r'))
+except:
+    scores = [(x * x * 90, 'David Alves') for x in xrange(10)]
+bisect.insort(scores, (score, raw_input('Enter your name: ')))
+print('High Scores:\n')
+for s in reversed(scores[-10:]):
+    print("%10d %s" % s)
+pickle.dump(scores[-10:], open('hiscore', 'w'))
