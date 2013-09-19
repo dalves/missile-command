@@ -10,14 +10,13 @@ add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
 screen = pygame.display.set_mode(size, pygame.FULLSCREEN | pygame.HWSURFACE)
 clock = pygame.time.Clock()
-class AttributeHack(object):
+class GameObj(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs, alive=1)
-Base = Missile = Explosion = AttributeHack
 pygame.init()
 scorefont = pygame.font.SysFont("monospace", 15)
 titlefont = pygame.font.SysFont("monospace", 100)
-bases = [Base(pos=Point(250+100*x, height), armed_in=30*x) for x in xrange(5)]
+bases = [GameObj(pos=Point(250+100*x, height), armed_in=9*x) for x in range(5)]
 explosions = []
 missiles = []
 def text(font, string, position, color):
@@ -29,7 +28,7 @@ while bases:
         dest = Point(rand.randint(200, width - 200), height)
         v = Point(rand.randint(-3, 3), 3)
         start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
-        missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
+        missiles.append(GameObj(pos=start, dest=dest, color=(250, 0, 0), v=v,
                 tail=25, icbm=height - rand.randint(50, 180) * 3))
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
@@ -47,7 +46,7 @@ while bases:
                     base = min(armed, key=lambda b: dist(b.pos, dest))
                     pos = Point(base.pos.x, height - 20)
                     base.armed_in = 25
-                    missiles.append(Missile(pos=pos, dest=dest, tail=1, icbm=0,
+                    missiles.append(GameObj(pos=pos, dest=dest, tail=1, icbm=0,
                             v=aim_at(pos, dest, 5), color=(160, 255, 220)))
         for base in bases:
             base.armed_in = max(0, base.armed_in - 1)
@@ -60,11 +59,11 @@ while bases:
                     add_scaled_vector(m.pos, m.v, -m.tail), 8)
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
-                explosions.append(Explosion(pos=m.pos, age=0))
+                explosions.append(GameObj(pos=m.pos, age=0))
             elif m.icbm == m.pos.y and round_num > 5 and 0 < m.pos.x < 900:
                 m.alive = 0
                 for base in bases:
-                    missiles.append(Missile(pos=m.pos, dest=base.pos,
+                    missiles.append(GameObj(pos=m.pos, dest=base.pos,
                             v=aim_at(m.pos, base.pos, (600 - m.pos.y) / 3),
                             color=(250, 0, 0), tail=5, icbm=0))
         for ex in explosions[:]:
@@ -72,12 +71,12 @@ while bases:
             for base in bases:
                 if dist(base.pos, ex.pos) < r * .6:
                     base.alive = 0
-                    explosions.append(Explosion(pos=base.pos, age=1))
+                    explosions.append(GameObj(pos=base.pos, age=1))
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
                     score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
-                    explosions.append(Explosion(pos=m.pos, age=1))
+                    explosions.append(GameObj(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), map(int, ex.pos), r)
         for ex in explosions: # paint inner part in separate pass, looks better
             r = int(radius(ex.age) * (30 - ex.age) / 30)
