@@ -4,7 +4,7 @@ round_num = 0 # of features into 100 lines, even at the expense of readability.
 size = width, height = 900, 600 # :) See with-comments branch for comments.
 import sys, pygame, random as rand, collections, bisect, pickle
 Point = collections.namedtuple('Point', 'x y')
-dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
+dist = lambda a,b: ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) ** .5
 radius = lambda x: 350 * (x / 30 - 2 * (x / 30) ** 2 + (x / 30) ** 3)
 add_scaled_vector = lambda pos, v, s: Point(pos.x + s * v.x, pos.y + s * v.y)
 aim_at = lambda s, t, time: Point((t.x - s.x) / time, (t.y - s.y) / time)
