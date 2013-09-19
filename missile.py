@@ -62,9 +62,9 @@ while bases:
                 explosions.append(GameObj(pos=m.pos, age=0))
             elif m.icbm == m.pos.y and round_num > 5 and 0 < m.pos.x < 900:
                 m.alive = 0
-                for base in bases:
-                    missiles.append(GameObj(pos=m.pos, dest=base.pos,
-                            v=aim_at(m.pos, base.pos, (600 - m.pos.y) / 3),
+                for target in [Point(250 + 100 * x, 600) for x in xrange(6)]:
+                    missiles.append(GameObj(pos=m.pos, dest=target,
+                            v=aim_at(m.pos, target, (600 - m.pos.y) / 3),
                             color=(250, 0, 0), tail=5, icbm=0))
         for ex in explosions[:]:
             r = int(radius(ex.age))
