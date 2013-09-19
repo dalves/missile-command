@@ -27,7 +27,7 @@ while bases:
     for x in xrange(round_num - 1 + int(1.2 ** round_num)):
         dest = Point(rand.randint(200, width - 200), height)
         v = Point(rand.randint(-3, 3), 3)
-        start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
+        start = add_scaled_vector(dest, v, - rand.randint(170, end_frame - 5))
         missiles.append(GameObj(pos=start, dest=dest, color=(250, 0, 0), v=v,
                 tail=25, icbm=height - rand.randint(50, 180) * 3))
     for t in xrange(end_frame):
