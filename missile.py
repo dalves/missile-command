@@ -1,8 +1,8 @@
 from __future__ import division # Missile Command in 100 lines of Python
-score = 0 # Apologies for how unreadable this code is -- the goal is to cram as
-round_num = 0 # many features into 100 lines as I can, even at the expense of
-size = width, height = 900, 600 # readability. :)
-import sys, pygame, random as rand, collections
+score = 0 # Apologies for how unreadable this code is. The goal is to cram lots
+round_num = 0 # of features into 100 lines, even at the expense of readability.
+size = width, height = 900, 600 # :) See with-comments branch for comments.
+import sys, pygame, random as rand, collections, bisect, pickle
 
 # It would be save a line to use regular tuples for points and index x and y
 # using point[0] and point[1], but I think this is much clearer.
@@ -10,7 +10,7 @@ Point = collections.namedtuple('Point', 'x y')
 
 # Distance formula. For best performance we could use distance squared
 # instead of distance, but we're not doing much work so let's go for clarity.
-dist = lambda a,b: ((a.x-b.x)**2+(a.y-b.y)**2)**.5
+dist = lambda a,b: ((a.x - b.x) ** 2 + (a.y - b.y) ** 2) ** .5
 
 # Explosion radius as a function of time. It increases sharply from f(0) = 0 to
 # a max at f(10) ~= 50, then slowly back down to f(30) = 0
@@ -35,10 +35,9 @@ clock = pygame.time.Clock()
 # constructors use a lot of lines. To make things a little clearer, we'll
 # pretend like there are separate classes for Base, Missile, etc. but really
 # everything is just a bunch of AttributeHack objects.
-class AttributeHack(object):
+class GameObj(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs, alive=1)
-Base = Missile = Explosion = AttributeHack
 
 
 pygame.init()
@@ -46,7 +45,7 @@ scorefont = pygame.font.SysFont("monospace", 15)
 titlefont = pygame.font.SysFont("monospace", 100)
 
 # Allocate our array of bases. When this array is empty, the game ends.
-bases = [Base(pos=Point(250+100*x, height), armed_in=30*x) for x in xrange(5)]
+bases = [GameObj(pos=Point(250+100*x, height), armed_in=9*x) for x in range(5)]
 
 # We allocate the explosions and missiles arrays here so that they will persist
 # between rounds. If we allocated them per-round then the user might see one of
@@ -61,8 +60,8 @@ while bases:
     round_num += 1
 
     # Each round lasts a little longer than the previous one.
-    end_frame = 250 + round_num * 50
-    for x in xrange(round_num - 1 + int(1.2 ** round_num)):
+    end_frame = 300 + round_num * 50
+    for x in xrange(5 + round_num * 2 + int(1.13 ** round_num)):
         # For each missile, we randomly pick a target, time of impact, and
         # horizontal speed. The vertical speed is the same for all incoming
         # missiles. We then compute the origin of the missile based on those
@@ -71,12 +70,12 @@ while bases:
         # all off-screen.
         dest = Point(rand.randint(200, width - 200), height)
         v = Point(rand.randint(-3, 3), 3)
-        start = add_scaled_vector(dest, v, - rand.randint(200, end_frame - 5))
+        start = add_scaled_vector(dest, v, - rand.randint(170, end_frame - 5))
 
         # Each missile has an "ICBM elevation". When it hits that y position,
         # the missile will split into N missiles, one per base.
-        missiles.append(Missile(pos=start, dest=dest, color=(250, 0, 0), v=v,
-                tail=25, icbm=height - rand.randint(50, 180) * 3)
+        missiles.append(GameObj(pos=start, dest=dest, color=(250, 0, 0), v=v,
+                tail=25, icbm=height - rand.randint(50, 180) * 3))
     for t in xrange(end_frame):
         screen.fill((0, 0, 0))
         if t < 60:
@@ -86,8 +85,7 @@ while bases:
             text(titlefont, "Round %d" % round_num, (250, 200), (x, x, x))
         text(scorefont, "Score %d" % score, (0, 0), (255, 255, 255))
         for e in pygame.event.get():
-            if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and
-                    e.key in (pygame.K_q, pygame.K_ESCAPE)):
+            if hasattr(e, 'key') and e.key in (pygame.K_q, pygame.K_ESCAPE):
                 sys.exit()
             elif e.type == pygame.MOUSEBUTTONUP:
                 # only bases that are armed can fire. Bases take a while to
@@ -103,7 +101,7 @@ while bases:
                     pos = Point(base.pos.x, height - 20)
                     base.armed_in = 25
                     # create a new defensive missile.
-                    missiles.append(Missile(pos=pos, dest=dest, tail=1, icbm=0,
+                    missiles.append(GameObj(pos=pos, dest=dest, tail=1, icbm=0,
                             v=aim_at(pos, dest, 5), color=(160, 255, 220)))
         for base in bases:
             base.armed_in = max(0, base.armed_in - 1)
@@ -117,12 +115,12 @@ while bases:
             # Missiles turn into explosions when they reach their destinations
             if dist(m.pos, m.dest) < 5:
                 m.alive = 0
-                explosions.append(Explosion(pos=m.pos, age=0))
+                explosions.append(GameObj(pos=m.pos, age=0))
             elif m.icbm == m.pos.y and round_num > 5 and 0 < m.pos.x < 900:
                 m.alive = 0
-                for base in bases:
-                    missiles.append(Missile(pos=m.pos, dest=base.pos,
-                            v=aim_at(m.pos, base.pos, (600 - m.pos.y) / 3),
+                for target in [Point(250 + 100 * x, 600) for x in xrange(6)]:
+                    missiles.append(GameObj(pos=m.pos, dest=target,
+                            v=aim_at(m.pos, target, (600 - m.pos.y) / 3),
                             color=(250, 0, 0), tail=5, icbm=0))
         for ex in explosions[:]:
             r = int(radius(ex.age))
@@ -133,7 +131,7 @@ while bases:
                 # it's lame to accidentally blow up your own base.
                 if dist(base.pos, ex.pos) < r * .6:
                     base.alive = 0
-                    explosions.append(Explosion(pos=base.pos, age=1))
+                    explosions.append(GameObj(pos=base.pos, age=1))
             for m in missiles:
                 if m.alive and dist(m.pos, ex.pos) <= r:
                     m.alive = 0
@@ -143,7 +141,7 @@ while bases:
                     # missiles have red=250 while defensive missiles have
                     # red=0.
                     score += m.color[0] * (len(bases) if m.icbm > 0 else 1)
-                    explosions.append(Explosion(pos=m.pos, age=1))
+                    explosions.append(GameObj(pos=m.pos, age=1))
             pygame.draw.circle(screen, (200, 0, 0), map(int, ex.pos), r)
         for ex in explosions: # paint inner part in separate pass, looks better
             r = int(radius(ex.age) * (30 - ex.age) / 30)
@@ -156,3 +154,18 @@ while bases:
         clock.tick(30)
         pygame.display.flip()
     score += round_num * 1000 + len(bases) * 2500
+
+# We need to shut down out pygame display before prompting for a high score
+pygame.quit()
+
+# If high score file exists and is in the right format, read it in. Otherwise
+# initialize the table with some fake high scores.
+try:
+    scores = pickle.load(open('hiscore', 'r'))
+except:
+    scores = [(1000 * int(10 * 1.6682 ** x), 'David Alves') for x in range(10)]
+bisect.insort(scores, (score, raw_input('Enter your name: ')))
+print('High Scores:\n')
+for s in reversed(scores[-10:]):
+    print("%10d %s" % s)
+pickle.dump(scores[-10:], open('hiscore', 'w'))
