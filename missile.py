@@ -92,7 +92,7 @@ pygame.quit()
 try:
     scores = pickle.load(open('hiscore', 'r'))
 except:
-    scores = [(1000 * int(10 * 1.67 ** x), 'David Alves') for x in xrange(10)]
+    scores = [(1000 * int(10 * 1.6682 ** x), 'David Alves') for x in range(10)]
 bisect.insort(scores, (score, raw_input('Enter your name: ')))
 print('High Scores:\n')
 for s in reversed(scores[-10:]):
